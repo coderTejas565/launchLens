@@ -6,27 +6,27 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function createProject(formData: FormData) {
-    try {
-        const rawData = {
-            name: formData.get("name"),
-            description: formData.get("description"),
-            url: formData.get("url"),
-            Category: formData.get("category")
-        };
+  try {
+    const rawData = {
+        name: formData.get("name")?.toString() || "",
+        description: formData.get("description")?.toString() || "",
+        url: formData.get("url")?.toString() || "",
+        category: formData.get("category")?.toString() || "",
+    };
 
-        const validatedData = projectSchema.parse(rawData);
+    const validatedData = projectSchema.parse(rawData);
 
-        await prisma.project.create({
-            data: validatedData
-        })
-        
-        revalidatePath("/projects");
+    await prisma.project.create({
+      data: validatedData,
+    });
 
-        redirect("/projects")
-    } catch (error) {
-        console.error("Create Project Error:", error);
-        throw new Error("Failed to create project");
-    }
+    revalidatePath("/projects");
+
+    redirect("/projects");
+    
+  } catch (error) {
+    throw error;
+  }
 }
 
 
