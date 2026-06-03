@@ -2,7 +2,6 @@
 
 import { prisma } from "@/lib/db/prisma";
 import { projectSchema } from "@/lib/schemas/project.schema";
-import { Category } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -59,7 +58,9 @@ export async function deleteProject(id: string) {
         },
     })
     revalidatePath("/projects");
-    revalidatePath("/dashboard")
+    revalidatePath("/dashboard");
+
+    redirect("/dashboard")
 }
 
 export async function updateProject(id: string, formData: FormData) {

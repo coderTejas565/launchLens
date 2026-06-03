@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getProjects } from "@/actions/project.actions";
+import { deleteProject } from "@/actions/project.actions";
 
 export default async function DashboardPage() {
     const projects = await getProjects();
@@ -47,41 +48,33 @@ export default async function DashboardPage() {
           </p>
         </div>
       </div>
-
       <div className="grid gap-4">
         {projects.map((project) => (
-          <div
-            key={project.id}
-            className="border rounded p-4 flex justify-between items-center"
-          >
-            <div>
-              <h2 className="font-semibold text-lg">
-                {project.name}
-              </h2>
-
-              <p className="text-sm text-gray-600">
-                {project.category}
-              </p>
-            </div>
-
-            <div className="flex gap-3">
-              <Link
-                href={`/projects/${project.id}`}
-                className="text-blue-500 text-sm"
-              >
-                View
-              </Link>
-
-              <Link
-                href={`/dashboard/edit/${project.id}`}
-                className="text-green-600 text-sm"
-              >
-                Edit
-              </Link>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
+            <div key={project.id} className="border rounded p-4 flex justify-between items-center">
+                <div>
+                    <h2 className="font-semibold text-lg">
+                        {project.name}
+                        </h2>
+                        <p className="text-sm text-gray-600">
+                            {project.category}
+                            </p>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <Link href={`/projects/${project.id}`} className="text-blue-500 text-sm">
+                                View
+                                </Link>
+                                <Link href={`/dashboard/edit/${project.id}`} className="text-green-600 text-sm">
+                                Edit
+                                </Link>
+                                <form action={deleteProject.bind(null, project.id)}>
+                                    <button type="submit" className="text-red-500 text-sm">
+                                        Delete
+                                        </button>
+                                        </form>
+                                        </div>
+                                        </div>
+                                    ))}
+                                    </div>
+                                    </div>
+                                    );
+                                }
