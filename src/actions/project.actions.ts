@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/db/prisma";
 import { projectSchema } from "@/lib/schemas/project.schema";
+import { Category } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -23,7 +24,7 @@ export async function createProject(formData: FormData) {
     revalidatePath("/projects");
 
     redirect("/projects");
-    
+
   } catch (error) {
     throw error;
   }
@@ -59,4 +60,25 @@ export async function deleteProject(id: string) {
     })
     revalidatePath("/projects");
     revalidatePath("/dashboard")
+}
+
+export async function updateProject(id: string, formData: FormData) {
+  const rawData = {
+    name: formData.get("name")?.toString() || "",
+    description: formData.get("description")?.toString() || "",
+    url: formData.get("url")?.toString() || "",
+    category: formData.get("category")?.toString() || "",
+  };
+
+  const validated = projectSchema.parse(rawData);
+
+  await prisma.project.update({
+    where: { id },
+    data: validated,
+  });
+
+  revalidatePath("/projects");
+  revalidatePath("/dashboard");
+
+  redirect("/dashboard");
 }
