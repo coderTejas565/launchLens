@@ -30,7 +30,7 @@ const STEPS = [
 ];
 
 export const HowItWorks = () => (
-  <section className="py-24 bg-slate-50/50 relative overflow-hidden border-y border-slate-100">
+  <section id="how-it-works" className="py-24 bg-slate-50/50 relative overflow-hidden border-y border-slate-100">
     <Container>
       
       {/* Centralized Section Header */}

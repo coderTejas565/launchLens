@@ -14,7 +14,7 @@ const BENTO_CATEGORIES = [
 ];
 
 export const Categories = () => (
-  <section className="py-24 bg-white border-b border-slate-100">
+  <section id="categories" className="py-24 bg-white border-b border-slate-100">
     <Container>
       
       {/* Centered Heading */}

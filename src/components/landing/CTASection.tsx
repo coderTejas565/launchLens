@@ -1,6 +1,7 @@
 // components/CTASection.tsx
 import { Container, Button } from '@/components/shared';
 import { ArrowRight, Sparkles } from 'lucide-react';
+import Link from 'next/link';
 
 export const CTASection = () => (
   <section className="py-24 bg-white relative overflow-hidden">
@@ -32,14 +33,16 @@ export const CTASection = () => (
           </p>
 
           {/* Corrected Button Core Props Mapping */}
+          <Link href="/dashboard">
           <Button 
             variant="secondary"
             size="lg"
             className="rounded-full !bg-white !text-slate-900 font-bold shadow-lg shadow-orange-900/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
             rightIcon={<ArrowRight size={16} />}
-          >
+            >
             Get Started
           </Button>
+        </Link>
 
         </div>
       </div>

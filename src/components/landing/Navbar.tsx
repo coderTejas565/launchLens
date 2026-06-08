@@ -1,5 +1,6 @@
 // components/Navbar.tsx
 import { Container, Button } from '@/components/shared';
+import Link from "next/link";
 
 export const Navbar = () => (
   // Fixed wrapper to handle position without disrupting layout flow
@@ -9,25 +10,28 @@ export const Navbar = () => (
         
         {/* Left: Brand Logo */}
         <div className="flex items-center gap-8">
-          <a href="#" className="text-xl font-bold tracking-tighter text-[#FF6B35] transition-transform active:scale-95">
+          <Link  href="/" className="text-xl font-bold tracking-tighter text-[#FF6B35] transition-transform active:scale-95">
             LaunchLens
-          </a>
+          </Link >
           
           {/* Center: Navigation Links */}
           <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
-            <a href="#" className="hover:text-slate-900 transition-colors">Categories</a>
-            <a href="#" className="hover:text-slate-900 transition-colors">How it Works</a>
-            <a href="#" className="hover:text-slate-900 transition-colors">Projects</a>
-            <a href="#" className="hover:text-slate-900 transition-colors">Feedback</a>
+            <a  href="#categories" className="hover:text-slate-900 transition-colors">Categories</a>
+            <a href="#how-it-works" className="hover:text-slate-900 transition-colors">How it Works</a>
+            <Link  href="/projects" className="hover:text-slate-900 transition-colors">Projects</Link>
+            <a href="#feedback" className="hover:text-slate-900 transition-colors">Feedback</a>
           </div>
         </div>
 
         {/* Right: CTA Button */}
         <div>
+            <Link href="/dashboard/new">
           <Button className="py-2 px-4 sm:px-5 text-sm rounded-full font-medium shadow-sm transition-all duration-200 hover:shadow-md">
             Post Project
           </Button>
+            </Link>
         </div>
+
 
       </Container>
     </nav>

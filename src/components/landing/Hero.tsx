@@ -2,6 +2,7 @@
 import { Container, Button } from '@/components/shared';
 import { HeroPreview } from './HeroPreview';
 import { Rocket, MessageSquare, ArrowRight } from 'lucide-react';
+import Link from "next/link";
 
 export const Hero = () => (
   <section className="relative pt-20 pb-28 bg-[#F8FAFC] overflow-hidden">
@@ -44,21 +45,26 @@ export const Hero = () => (
 
         {/* CTA Buttons Layout */}
         <div className="mt-8 flex flex-wrap gap-3.5 w-full sm:w-auto">
+             <Link href="/dashboard/new">
           <Button 
             variant="gradient" 
             size="lg"
             className="rounded-full font-bold shadow-lg shadow-orange-500/10 px-8 hover:scale-[1.02]"
             rightIcon={<ArrowRight size={16} />}
-          >
+            >
             Submit Project
           </Button>
+              </Link>
+
+              <Link href="/projects">
           <Button 
             variant="secondary" 
             size="lg"
             className="rounded-full font-bold bg-white/80 border-slate-200/60 hover:bg-white text-slate-700 hover:text-slate-900 px-8"
-          >
+            >
             Browse Projects
           </Button>
+              </Link>
         </div>
 
         {/* Minimal Bottom Trust Check Pills */}

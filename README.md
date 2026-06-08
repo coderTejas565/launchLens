@@ -1,12 +1,30 @@
 # LaunchLens
 
+Live Demo: https://launch-lens-five.vercel.app/
+
+Repository: https://github.com/coderTejas565/launchLens
+
+---
+
 ## Overview
 
-LaunchLens is a full-stack project feedback platform built with Next.js. It allows makers to submit their projects, share them publicly, and collect structured feedback from other builders.
+LaunchLens is a full-stack project feedback platform built with Next.js.
 
-The platform is designed to help developers receive actionable insights on their projects through ratings, strengths, and improvement suggestions.
+It allows makers to submit their projects, share them publicly, and receive structured feedback from other builders through ratings, strengths, and improvement suggestions.
 
-This project was built to demonstrate core full-stack Next.js concepts including App Router, Server Actions, API Routes, SSR, ISR, database integration, and CRUD operations.
+The platform is designed around a simple feedback loop:
+
+```text
+Submit Project
+      ↓
+Receive Feedback
+      ↓
+Improve Project
+      ↓
+Share Again
+```
+
+This project was built to demonstrate core full-stack Next.js concepts including App Router, Route Groups, Server Actions, API Routes, SSR, ISR, database integration, CRUD operations, and modern SaaS architecture patterns.
 
 ---
 
@@ -24,9 +42,9 @@ This project was built to demonstrate core full-stack Next.js concepts including
 
 - Submit feedback for any project
 - Rate projects from 1–5
-- Provide strengths and improvement suggestions
-- View all feedback for a project
-- Calculate and display average project rating
+- Share strengths and improvement suggestions
+- View feedback history
+- Calculate and display average ratings
 
 ### Rendering Strategies
 
@@ -36,10 +54,10 @@ This project was built to demonstrate core full-stack Next.js concepts including
 
 ### API Features
 
-- RESTful API routes
+- RESTful API Routes
 - Structured JSON responses
 - GET, POST, PATCH, and DELETE operations
-- Error handling
+- Proper error handling
 
 ### Server Actions
 
@@ -74,6 +92,10 @@ This project was built to demonstrate core full-stack Next.js concepts including
 
 - Zod
 
+### Deployment
+
+- Vercel
+
 ---
 
 ## Project Structure
@@ -85,25 +107,34 @@ src
 │   └── feedback.actions.ts
 │
 ├── app
-│   ├── (public)
-│   │   ├── page.tsx
-│   │   └── projects
-│   │       ├── page.tsx
-│   │       └── [id]
-│   │           └── page.tsx
-│   │
-│   ├── dashboard
+│   ├── (marketing)
 │   │   ├── layout.tsx
-│   │   ├── page.tsx
-│   │   ├── new
-│   │   │   └── page.tsx
-│   │   └── edit
-│   │       └── [id]
-│   │           └── page.tsx
+│   │   └── page.tsx
+│   │
+│   ├── (app)
+│   │   ├── layout.tsx
+│   │
+│   │   ├── projects
+│   │   │   ├── page.tsx
+│   │   │   └── [id]
+│   │   │       └── page.tsx
+│   │   │
+│   │   └── dashboard
+│   │       ├── page.tsx
+│   │       ├── new
+│   │       │   └── page.tsx
+│   │       └── edit
+│   │           └── [id]
+│   │               └── page.tsx
 │   │
 │   ├── api
 │   │   ├── projects
+│   │   │   ├── route.ts
+│   │   │   └── [id]
+│   │   │       └── route.ts
+│   │   │
 │   │   └── feedback
+│   │       └── route.ts
 │   │
 │   ├── loading.tsx
 │   ├── error.tsx
@@ -111,6 +142,9 @@ src
 │   └── layout.tsx
 │
 ├── components
+│   ├── shared
+│   ├── project
+│   └── feedback
 │
 ├── lib
 │   ├── db
@@ -120,6 +154,8 @@ src
 │       ├── project.schema.ts
 │       └── feedback.schema.ts
 │
+├── types
+│
 └── prisma
     └── schema.prisma
 ```
@@ -127,6 +163,19 @@ src
 ---
 
 ## Database Schema
+
+### Category Enum
+
+```prisma
+enum Category {
+  SAAS
+  AI
+  WEB
+  MOBILE
+  TOOL
+  OTHER
+}
+```
 
 ### Project
 
@@ -136,7 +185,7 @@ src
 | name | String |
 | description | String |
 | url | String |
-| category | Enum |
+| category | Category |
 | createdAt | DateTime |
 | updatedAt | DateTime |
 
@@ -218,7 +267,7 @@ One project can have multiple feedback entries.
 
 ### Why Server Actions?
 
-Server Actions are used for form submissions and direct server-side mutations without creating additional API calls from the client.
+Server Actions are used for direct form submissions and server-side mutations without requiring client-side API requests.
 
 Examples:
 
@@ -226,6 +275,25 @@ Examples:
 - Updating projects
 - Deleting projects
 - Submitting feedback
+
+### API Routes vs Server Actions
+
+#### API Routes
+
+Used for:
+
+- External access
+- Postman testing
+- Future mobile applications
+- Public API consumption
+
+#### Server Actions
+
+Used for:
+
+- Form submissions
+- Database mutations
+- Direct server communication
 
 ---
 
@@ -249,7 +317,7 @@ The landing page content is static and does not require request-time data.
 
 Route:
 
-```text
+```ts
 /projects
 ```
 
@@ -261,7 +329,7 @@ export const revalidate = 60;
 
 Reason:
 
-Projects update periodically, but not on every request. ISR provides better performance while keeping content fresh.
+Projects update periodically but do not require rendering on every request.
 
 ---
 
@@ -275,15 +343,13 @@ Route:
 
 Reason:
 
-Project details and feedback data should always be fetched at request time to ensure users see the latest information.
+Project details and feedback should always display the latest available data.
 
 ---
 
 ## Error Handling
 
-The application includes:
-
-### Route Error Boundaries
+### Global Error Boundary
 
 ```text
 app/error.tsx
@@ -297,14 +363,14 @@ Handles unexpected runtime errors.
 app/not-found.tsx
 ```
 
-Handles invalid or missing routes.
+Handles invalid routes and missing projects.
 
 ### Validation
 
-Zod schemas are used to validate:
+Zod schemas validate:
 
-- Project data
-- Feedback data
+- Project submissions
+- Feedback submissions
 
 ---
 
@@ -313,7 +379,7 @@ Zod schemas are used to validate:
 Create a `.env` file:
 
 ```env
-DATABASE_URL="YOUR_DATABASE_URL"
+DATABASE_URL="your_database_url"
 ```
 
 ---
@@ -354,7 +420,7 @@ pnpm install
 pnpm dev
 ```
 
-Application will run at:
+Application runs on:
 
 ```text
 http://localhost:3000
@@ -362,7 +428,7 @@ http://localhost:3000
 
 ---
 
-## Build for Production
+## Production Build
 
 ```bash
 pnpm build
@@ -380,8 +446,9 @@ This project demonstrates:
 
 - Next.js App Router
 - File-Based Routing
-- Nested Layouts
 - Dynamic Routes
+- Route Groups
+- Nested Layouts
 - Server Components
 - Server Actions
 - API Routes
@@ -392,31 +459,49 @@ This project demonstrates:
 - SSR
 - SSG
 - ISR
-- Error Handling
 - Cache Revalidation
+- Error Boundaries
+- Not Found Handling
+- Full-Stack Next.js Architecture
 
 ---
 
 ## Assumptions and Limitations
 
-- Authentication is not implemented.
-- Project ownership is not enforced.
-- Feedback submissions are public.
-- Dashboard currently displays all projects.
-- The application focuses on demonstrating full-stack Next.js concepts rather than multi-user functionality.
+- Authentication is not implemented
+- Project ownership is not enforced
+- Feedback submissions are public
+- Dashboard currently displays all projects
+- No user accounts or roles exist
+- Focus is on demonstrating Next.js full-stack concepts rather than multi-user functionality
 
 ---
 
 ## Deployment
 
-Live URL:
+Production:
 
-```text
-Add deployment link here
-```
+https://launch-lens-five.vercel.app/
 
 Repository:
 
-```text
-https://github.com/coderTejas565/launchLens.git
-```
+https://github.com/coderTejas565/launchLens
+
+---
+
+## What This Project Demonstrates
+
+LaunchLens was built to showcase a complete full-stack Next.js application using modern App Router architecture.
+
+The project demonstrates:
+
+- Route Groups for separating marketing and application experiences
+- Server Actions for direct server-side mutations
+- API Routes for external access and REST operations
+- Prisma ORM with PostgreSQL
+- Multiple rendering strategies (SSG, ISR, SSR)
+- Full CRUD functionality
+- Validation and error handling
+- Production deployment on Vercel
+
+The implementation prioritizes clean architecture, maintainable code structure, and proper use of Next.js features taught throughout the course.

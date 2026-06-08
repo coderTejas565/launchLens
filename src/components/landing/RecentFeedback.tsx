@@ -39,7 +39,7 @@ const RECENT_FEEDBACK = [
 const MARQUEE_ITEMS = [...RECENT_FEEDBACK, ...RECENT_FEEDBACK];
 
 export const RecentFeedback = () => (
-  <section className="py-24 bg-[#F8FAFC] relative overflow-hidden border-b border-slate-100">
+  <section id="feedback" className="py-24 bg-[#F8FAFC] relative overflow-hidden border-b border-slate-100">
     <Container>
       <SectionHeading 
         title="Live Feedback Stream" 
